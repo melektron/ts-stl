@@ -1,23 +1,18 @@
-# elstd
-The ELEKTRON C++ standard library - A C++ standard library extension providing many useful features, utilitys or C++ stdlib extensions. 
+# ts-stl
+ts-stl is a collection of wrapper classes adding thread safety to generic C++ STL container classes using STL features.
 
-## Why elstd?
+## What does ts-stl do?
 
-First of all, __elstd is NOT a optimized and extended replacement of the C++ standard library__. Instead, elstd is an additional C++ library that adds standard features that I frequently need or that I feel are missing from the C++ stdlib. Some features are just for convenience, some to make code shorter and more readable and some add completely new functionality.
+First of all, __elstd is NOT a replacement for some STL classes__. Instead, ts-stl wrapps STL classes (mostly container classes like unordered_map that have to be provided by the system specific STL implementation) with a safety layer that intercepts method calls and makes sure no two threads access the data simultaniously in a forbidden way. For example, while one thread is writing to the container, all other threads accessing the object may have to wait until the write operation is done.
 
 ## Compatability
 
-Not all features of elstd are compatible with all compilers, OSes and platforms. Some features are explicitly aimed at Windows. However, many features just use the C++ stdlib and can be used with every platform and compiler. 
+ts-stl should work with C++ 17 (and possibly higher) in all environments that provide a concurency implementation (standard threading and mutex classes) according to the STL spec. This should include all modern environments on OSes like Windows, Linux and MacOS but may not work on low power systems like microcontrollers.
 
-<br>
+## Class list
 
-Every feature can be explicitly activated or deactivated to ajust for any requirements.
+ * None
 
-## Feature list
-
- * Standardized logging functionality (LOGE, LOGD, LOGI, LOGW, LOGC)
- * retcode - a standardized return code enumeration
-
-## Planned features
+## Planned Classes
  
- * Simple Win32 object oriented windowing class for Windows and Visual Studio
+ * unordered_map
