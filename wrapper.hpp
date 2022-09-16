@@ -17,6 +17,10 @@ Thread-safe wraper for any container or class
 #include <shared_mutex>
 #include <chrono>
 
+
+using namespace std::chrono_literals;
+
+
 namespace ts
 {
     template <class _T>
@@ -30,21 +34,19 @@ namespace ts
         typedef std::unique_lock<std::shared_timed_mutex> _ulock_t;
         typedef std::shared_lock<std::shared_timed_mutex> _slock_t;
 
-        map_wrapper(_T &&_stl_init)
+        wrapper(_T &&_stl_init)
             : __container(std::move(_stl_init))
         {
         }
-        map_wrapper(const _T &_stl_init)
+        wrapper(const _T &_stl_init)
             : __container(std::copy(_stl_init))
         {
         }
-        map_wrapper() = default;
+        wrapper() = default;
 
         // allow copy, move, assign
-        map_wrapper(const map_wrapper &_other) = default;
-        map_wrapper(const map_wrapper &&_other) = default;
-
-        using namespace std::chrono_literals;
+        wrapper(const wrapper &_other) = default;
+        wrapper(wrapper &&_other) = default;
 
         /**
          * @brief tries to acquire exclusive access to the container
@@ -58,12 +60,17 @@ namespace ts
          * using the release() method on the lock or by calling it's destructor (aka make it go
          * out of skope -> prefered).
          */
-        _ulock_t get_exclusive_access(std::chrono::milliseconds _timeout = 1000ms);
+        _ulock_t get_exclusive_access(std::chrono::milliseconds _timeout = 1000ms)
+        {
+            std::unique_lock lock(__stmutex, std::defer_lock);
+            lock.try_lock_for(_timeout);
+            return lock;
+        }
 
         /**
          * @brief tries to acquire shared access to the container
          * by locking the internal mutex. If the lock succeeds, the method
-         * returns a unique lock owning the mutex. If the ownershit could not
+         * returns a shared lock owning the mutex. If the ownershit could not
          * be acquired before the timeout, a lock without ownershit is returned.
          * The ownership status can be checked by explicitly or implicitly casting to
          * bool or by using the owns_lock() method on the lock.
@@ -72,19 +79,24 @@ namespace ts
          * using the release() method on the lock or by calling it's destructor (aka make it go
          * out of skope -> prefered).
          */
-        _ulock_t get_shared_access(std::chrono::milliseconds _timeout = 1000ms);
+        _slock_t get_shared_access(std::chrono::milliseconds _timeout = 1000ms)
+        {
+            std::shared_lock lock(__stmutex, std::defer_lock);
+            lock.try_lock_for(_timeout);
+            return lock;
+        }
 
         /**
          * @brief arrow operator can be used to access the underlying object.
          * When using this operator, it is assumed that propper access has been aquired
          * before using get_exclusive_access() or get_shared_access()
          */
-        _T *operator->() const
+        _T *operator->()
         {
             return &__container;
         }
 
-        _T &operator*() const
+        _T &operator*()
         {
             return __container;
         }
