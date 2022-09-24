@@ -20,4 +20,7 @@ namespace ts
 {
     template <class... _Args>
     using umap = wrapper<std::unordered_map<_Args...>>;
+
+    template <class... _Args>
+    using umultimap = wrapper<std::unordered_multimap<_Args...>>;
 };
