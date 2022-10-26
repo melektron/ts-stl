@@ -91,7 +91,7 @@ namespace ts
             }
             __lock.try_lock_for(__lock_timeout);
             if (!__lock)
-                throw lock_timeout_error("ts-stl/wrapper shared_accessor::lock()");
+                throw lock_timeout_error("ts-stl/wrapper shared_accessor::lock() timeout");
         }
 
         /**
@@ -124,7 +124,7 @@ namespace ts
             {
                 __lock.try_lock_for(__lock_timeout);
                 if (!__lock)
-                    throw lock_timeout_error("ts-stl/wrapper shared_accessor::operator->()");
+                    throw lock_timeout_error("ts-stl/wrapper shared_accessor::operator->() timeout");
             }
 
             return &__container;
@@ -150,7 +150,7 @@ namespace ts
             {
                 __lock.try_lock_for(__lock_timeout);
                 if (!__lock)
-                    throw lock_timeout_error("ts-stl/wrapper shared_accessor::operator*()");
+                    throw lock_timeout_error("ts-stl/wrapper shared_accessor::operator*() timeout");
             }
 
             return __container;
@@ -219,7 +219,7 @@ namespace ts
             }
             __lock.try_lock_for(__lock_timeout);
             if (!__lock)
-                throw lock_timeout_error("ts-stl/wrapper unique_accessor::lock()");
+                throw lock_timeout_error("ts-stl/wrapper unique_accessor::lock() timeout");
         }
 
         /**
@@ -252,7 +252,7 @@ namespace ts
             {
                 __lock.try_lock_for(__lock_timeout);
                 if (!__lock)
-                    throw lock_timeout_error("ts-stl/wrapper unique_accessor::operator->()");
+                    throw lock_timeout_error("ts-stl/wrapper unique_accessor::operator->() timeout");
             }
 
             return &__container;
@@ -278,7 +278,7 @@ namespace ts
             {
                 __lock.try_lock_for(__lock_timeout);
                 if (!__lock)
-                    throw lock_timeout_error("ts-stl/wrapper unique_accessor::operator*()");
+                    throw lock_timeout_error("ts-stl/wrapper unique_accessor::operator*() timeout");
             }
 
             return __container;
